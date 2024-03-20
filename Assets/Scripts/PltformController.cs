@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PltformController : MonoBehaviour
@@ -7,7 +5,6 @@ public class PltformController : MonoBehaviour
     [SerializeField] private SliderJoint2D _platform;
 
     private JointMotor2D _motor;
-
     private bool _isPlatformRotation;
 
     void Start()
@@ -19,6 +16,16 @@ public class PltformController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Rotation(collision);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        Transports(collision);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        collision.transform.parent = null;
     }
 
     private void Rotation(Collider2D collision)
@@ -36,6 +43,15 @@ public class PltformController : MonoBehaviour
         {
             _platform.motor = _motor;
             _isPlatformRotation = !_isPlatformRotation;
+        }
+    }
+
+    private void Transports(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.transform.parent = transform;
+            
         }
     }
 }
