@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
+    [SerializeField] private Text _currentHealthText;
     [SerializeField] private float _maxHealth;
     private float _currentHealth;
 
@@ -9,10 +11,17 @@ public class Health : MonoBehaviour
     {
         _currentHealth = _maxHealth;
     }
+
+    private void Update()
+    {
+        PrintHealth();
+    }
+
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
     }
+
     public bool CheckIsAlive()
     {
         if (_currentHealth <= 0) 
@@ -25,8 +34,11 @@ public class Health : MonoBehaviour
         }
     }
 
-    public float GetHealth()
+    public void PrintHealth()
     {
-        return _currentHealth;
+        if (_currentHealthText != null)
+        {
+            _currentHealthText.text = $"HP {_currentHealth}";
+        }
     }
 }

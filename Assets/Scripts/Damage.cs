@@ -11,6 +11,7 @@ public class Damage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        DealDamage(collision, "Player");
         DealDamage(collision, "Enemy");
     }
 

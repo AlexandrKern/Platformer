@@ -2,24 +2,29 @@ using UnityEngine;
 
 [RequireComponent (typeof(AnimationController))]
 [RequireComponent (typeof(Rigidbody2D))]
+[RequireComponent(typeof(Health))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float _jumpForce;
     [SerializeField] private Transform _groundColliderTransform;
-    [SerializeField] private bool _isGrounded;
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private float _radius;
     [SerializeField] private float _speedMovement;
 
+    private bool _isGrounded;
     private AnimationController _animationController;
     private Vector2 _ovetlapCirclePosition;
     private Rigidbody2D _knightRigidbody;
     private Quaternion _rotate;
 
+    private Health _health;
+
+
+
     private void Start()
     {
+        _health = GetComponent<Health> ();
         _animationController = GetComponent<AnimationController>();
-        _isGrounded = false;
         _knightRigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -36,19 +41,23 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(float direction, bool _IsJumpButtonPressed)
     {
-        if (_IsJumpButtonPressed)
-        {
-           Jump();
-        }
-        if (direction != 0)
-        {
-            RotateKnight(direction);
-            _animationController.KnightRunOnAnimation();
-            HorizontalMovement(direction);
-        }
-        else
-        {
-            _animationController.KnightIdleOnAnimation();
+        
+        if ((!_health.CheckIsAlive()&&Finish.Finished)&&StopKnight.Go)
+        {       
+            if (_IsJumpButtonPressed)
+            {
+                Jump();
+            }
+            if (direction != 0)
+            {
+                RotateKnight(direction);
+                _animationController.KnightRunOnAnimation();
+                HorizontalMovement(direction);
+            }
+            else
+            {
+                _animationController.KnightIdleOnAnimation();
+            }
         }
     }
 

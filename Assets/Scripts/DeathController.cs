@@ -1,42 +1,35 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(AnimationController))]
-[RequireComponent (typeof(Health))]
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class DeathController : MonoBehaviour
 {
-    [SerializeField] private GameObject _deathCanvas;
-    [SerializeField] private Text _healthText;
+    [SerializeField] private GameObject _deathPanel;
 
     private Health _health;
     private AnimationController _animationController;
 
     private void Start()
     {
-        _animationController = GetComponent<AnimationController>();
         _health = GetComponent<Health>();
+        _animationController = GetComponent<AnimationController>();
     }
 
     private void Update()
     {
         Death();
     }
+
     private void Death()
     {
-        if (CompareTag("Player")) 
+        if (CompareTag("Player"))
         {
             if (_health.CheckIsAlive())
             {
                 _animationController.KnightDeathOnAnimation();
-                _healthText.text = $"HP {_health.GetHealth()}";
-                StartCoroutine(TimerLoadScene());
-                _deathCanvas.SetActive(true);
-            }
-            else
-            {
-                _healthText.text = $"HP {_health.GetHealth()}";
+                _deathPanel.SetActive(true);
             }
         }
         if (CompareTag("Enemy"))
@@ -49,18 +42,11 @@ public class DeathController : MonoBehaviour
         }
     }
 
-    private IEnumerator TimerLoadScene()
-    {
-        yield return new WaitForSeconds(1);
-
-        _deathCanvas.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
     private IEnumerator TimerEnemyDeath()
     {
         yield return new WaitForSeconds(1);
-
         Destroy(gameObject);
+        ScoreText.Score += 50;
     }
 }
+

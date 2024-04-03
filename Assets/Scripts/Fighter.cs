@@ -4,7 +4,12 @@ using UnityEngine;
 public class Fighter : MonoBehaviour
 {
     [SerializeField] private GameObject _weapon;
+    [SerializeField] private LayerMask _enemyLayers;
+    [SerializeField] private float _damage;
+
+    private Collider2D[] _hitEnemies;
     private AnimationController _animationController;
+    private Health _health;
 
     private void Start()
     {
@@ -16,11 +21,15 @@ public class Fighter : MonoBehaviour
         if (_isHitButtonPressed)
         {
             _animationController.KnightAttackOnAnimation();
-            _weapon.transform.localPosition = new Vector2(0.3f, 0);
-        }
-        else
-        {
-            _weapon.transform.localPosition = Vector3.zero;
+            _hitEnemies = Physics2D.OverlapCircleAll(_weapon.transform.position, 0.5f, _enemyLayers);
+            foreach (Collider2D enemy in _hitEnemies)
+            {
+                _health = enemy.GetComponent<Health>();
+                if (_health != null)
+                {
+                    _health.TakeDamage(_damage);
+                }
+            }
         }
     }
 }

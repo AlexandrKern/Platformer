@@ -3,6 +3,7 @@ using UnityEngine;
 public class PltformController : MonoBehaviour
 {
     [SerializeField] private SliderJoint2D _platform;
+    [SerializeField] private float _speed;
 
     private JointMotor2D _motor;
     private bool _isPlatformRotation;
@@ -18,40 +19,21 @@ public class PltformController : MonoBehaviour
         Rotation(collision);
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        Transports(collision);
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        collision.transform.parent = null;
-    }
-
     private void Rotation(Collider2D collision)
     {
         if (_isPlatformRotation)
         {
-            _motor.motorSpeed = 1;
+            _motor.motorSpeed = _speed;
         }
         else
         {
-            _motor.motorSpeed = -1;
+            _motor.motorSpeed = -_speed;
         }
 
         if (collision.CompareTag("RotationPlatform"))
         {
             _platform.motor = _motor;
             _isPlatformRotation = !_isPlatformRotation;
-        }
-    }
-
-    private void Transports(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            collision.transform.parent = transform;
-            
         }
     }
 }
